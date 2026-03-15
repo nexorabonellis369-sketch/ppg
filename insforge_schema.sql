@@ -72,22 +72,37 @@ ALTER TABLE public.alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trades_history ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: Users can only see and edit their own profiles
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
 -- Portfolios: Users can only see and edit their own portfolios
+DROP POLICY IF EXISTS "Users can view own portfolios" ON public.portfolios;
 CREATE POLICY "Users can view own portfolios" ON public.portfolios FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own portfolios" ON public.portfolios;
 CREATE POLICY "Users can insert own portfolios" ON public.portfolios FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own portfolios" ON public.portfolios;
 CREATE POLICY "Users can update own portfolios" ON public.portfolios FOR UPDATE USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can delete own portfolios" ON public.portfolios;
 CREATE POLICY "Users can delete own portfolios" ON public.portfolios FOR DELETE USING (auth.uid() = user_id);
 
 -- Holdings: Users can manage holdings linked to their portfolios
+DROP POLICY IF EXISTS "Users can manage own holdings" ON public.holdings;
 CREATE POLICY "Users can manage own holdings" ON public.holdings FOR ALL
 USING (EXISTS (SELECT 1 FROM public.portfolios WHERE id = public.holdings.portfolio_id AND user_id = auth.uid()));
 
 -- Alerts: Users can manage their own alerts
+DROP POLICY IF EXISTS "Users can manage own alerts" ON public.alerts;
 CREATE POLICY "Users can manage own alerts" ON public.alerts FOR ALL USING (auth.uid() = user_id);
 
 -- Trades History: Users can view their own trade log
+DROP POLICY IF EXISTS "Users can view own trades" ON public.trades_history;
 CREATE POLICY "Users can view own trades" ON public.trades_history FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert trades" ON public.trades_history;
 CREATE POLICY "Users can insert trades" ON public.trades_history FOR INSERT WITH CHECK (auth.uid() = user_id);
