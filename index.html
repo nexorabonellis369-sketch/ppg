@@ -18,7 +18,46 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
+<body class="auth-locked">
+
+  <!-- ─── AUTH SCREEN ─── -->
+  <div class="auth-screen" id="auth-screen">
+    <div class="auth-card glass">
+      <div class="auth-header">
+        <div class="logo-icon">
+          <svg viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="18" fill="url(#lg2)" />
+            <polyline points="8,22 14,14 20,18 28,10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <defs>
+              <linearGradient id="lg2" x1="0" y1="0" x2="36" y2="36">
+                <stop stop-color="#6C63FF" />
+                <stop offset="1" stop-color="#3ECFCF" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h2>StockSage AI</h2>
+        <p id="auth-subtext">Sign in to your intelligent trading floor</p>
+      </div>
+
+      <form id="auth-form" class="auth-form">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="auth-email" placeholder="name@example.com" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="auth-pass" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn-primary w-full" id="auth-submit">Sign In</button>
+      </form>
+
+      <div class="auth-footer">
+        <p id="auth-toggle-text">Don't have an account? <a href="#" id="auth-toggle">Create Account</a></p>
+      </div>
+    </div>
+  </div>
 
   <!-- ─── SIDEBAR ─── -->
   <aside class="sidebar" id="sidebar">
@@ -75,6 +114,14 @@
           <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
         </svg>
         <span>LSTM Model</span>
+      </a>
+      <a href="#" class="nav-item" data-view="settings" id="nav-settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+        </svg>
+        <span>Settings</span>
       </a>
     </nav>
 
@@ -186,9 +233,20 @@
         <div class="card glass">
           <div class="card-header">
             <h2>Market Sentiment</h2>
-            <span class="badge green">AI Analysed</span>
+            <span class="badge blue">AI Analysed</span>
           </div>
-          <canvas id="sentiment-chart" height="220"></canvas>
+          <canvas id="sentiment-chart" height="180"></canvas>
+        </div>
+
+        <!-- Intelligence Feed -->
+        <div class="card glass">
+          <div class="card-header">
+            <h2>Intelligence Feed</h2>
+            <span class="pulse"></span>
+          </div>
+          <div class="news-list" id="dashboard-news">
+            <!-- Populated by JS -->
+          </div>
         </div>
       </div>
 
@@ -555,6 +613,97 @@
           <h2>Hyperparameters &amp; Configuration</h2>
         </div>
         <div class="config-grid" id="config-grid"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════ VIEW: SETTINGS ══════════════ -->
+    <section class="view" id="view-settings">
+      <div class="view-header">
+        <h1>Settings & Profile</h1>
+        <p>Manage your account, API keys, and platform preferences</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card glass">
+          <div class="card-header">
+            <h2>User Profile</h2>
+          </div>
+          <div class="settings-form">
+            <div class="form-group">
+              <label>Display Name</label>
+              <input type="text" value="Premium Trader" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" value="trader@stocksage.ai" disabled />
+            </div>
+            <div class="form-group">
+              <label>Account Tier</label>
+              <div class="tier-badge">Institution Elite</div>
+            </div>
+            <button class="btn-primary">Update Profile</button>
+          </div>
+        </div>
+
+        <div class="card glass">
+          <div class="card-header">
+            <h2>Notification Preferences</h2>
+          </div>
+          <div class="settings-list">
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Price Alerts</h3>
+                <p>Notify me when stock hits target/stop price</p>
+              </div>
+              <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Signal Alerts</h3>
+                <p>Notify me on new High Confidence signals</p>
+              </div>
+              <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-item">
+              <div class="setting-info">
+                <h3>Daily Digest</h3>
+                <p>Send me a summary of market sentiment</p>
+              </div>
+              <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card glass mt">
+        <div class="card-header">
+          <h2>API & Integration</h2>
+        </div>
+        <div class="settings-form">
+          <div class="form-group">
+            <label>Alpha Vantage API Key</label>
+            <div class="input-with-btn">
+              <input type="password" value="V38X9K2P01L8M7N5" />
+              <button class="btn-ghost">View</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Webhook URL (Export Signals)</label>
+            <input type="text" placeholder="https://your-api.com/webhook" />
+          </div>
+          <button class="btn-primary">Save API Settings</button>
+        </div>
+      </div>
+
+      <div class="card glass mt">
+        <div class="card-header">
+          <h2 class="red">Danger Zone</h2>
+        </div>
+        <div class="danger-box">
+          <p>Permanently delete your account and all portfolio history. This action cannot be undone.</p>
+          <button class="btn-ghost red-border" id="logout-btn">Sign Out</button>
+          <button class="btn-secondary red-bg">Delete Account</button>
+        </div>
       </div>
     </section>
 
