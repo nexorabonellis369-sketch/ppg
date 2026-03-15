@@ -253,13 +253,15 @@
       <!-- Market Overview Mini Chart -->
       <div class="card glass mt">
         <div class="card-header">
-          <h2>Live Price Feed – AAPL</h2>
+          <h2 id="dash-chart-title">Live Price Feed – AAPL</h2>
           <div class="tabs" id="dash-ticker-tabs">
             <button class="tab active" data-ticker="AAPL">AAPL</button>
             <button class="tab" data-ticker="TSLA">TSLA</button>
             <button class="tab" data-ticker="GOOGL">GOOGL</button>
             <button class="tab" data-ticker="MSFT">MSFT</button>
             <button class="tab" data-ticker="AMZN">AMZN</button>
+            <button class="tab" data-ticker="GOLD">GOLD</button>
+            <button class="tab" data-ticker="SILVER">SILVER</button>
           </div>
         </div>
         <div id="dash-price-chart" style="height:260px"></div>
@@ -302,6 +304,10 @@
                 <option value="NVDA">NVDA – NVIDIA Corp.</option>
                 <option value="META">META – Meta Platforms</option>
                 <option value="NFLX">NFLX – Netflix Inc.</option>
+                <option value="GOLD">GOLD – Gold Spot</option>
+                <option value="SILVER">SILVER – Silver Spot</option>
+                <option value="CRUDE">CRUDE – Crude Oil</option>
+                <option value="COPPER">COPPER – Copper Spot</option>
               </select>
             </div>
           </div>
@@ -499,6 +505,8 @@
                 <option>GOOGL</option>
                 <option>MSFT</option>
                 <option>AMZN</option>
+                <option>GOLD</option>
+                <option>SILVER</option>
               </select>
             </div>
             <div class="form-group">

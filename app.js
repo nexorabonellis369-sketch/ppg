@@ -16,10 +16,16 @@ const STOCKS = {
   NVDA: { name: 'NVIDIA Corp.', base: 875.40, sector: 'Semiconductors' },
   META: { name: 'Meta Platforms', base: 478.20, sector: 'Technology' },
   NFLX: { name: 'Netflix Inc.', base: 612.30, sector: 'Media' },
+  // Commodities
+  GOLD: { name: 'Gold Spot', base: 2155.40, sector: 'Commodities' },
+  SILVER: { name: 'Silver Spot', base: 24.85, sector: 'Commodities' },
+  CRUDE: { name: 'Crude Oil', base: 82.30, sector: 'Commodities' },
+  COPPER: { name: 'Copper Spot', base: 4.12, sector: 'Commodities' },
 };
 
 const TICKERS_TAPE = [
   'AAPL', 'TSLA', 'GOOGL', 'MSFT', 'AMZN', 'NVDA', 'META', 'NFLX',
+  'GOLD', 'SILVER', 'CRUDE', 'COPPER',
   'RELIANCE', 'INFY', 'TCS', 'HDFC', 'JPM', 'BAC', 'AMD', 'INTC',
   'DIS', 'UBER', 'LYFT', 'SPOT',
 ];
@@ -431,6 +437,9 @@ function buildSentimentChart() {
 function buildDashPriceChart(ticker) {
   destroyLW(dashChartInstance);
   const info = STOCKS[ticker] || STOCKS.AAPL;
+  const titleEl = document.getElementById('dash-chart-title');
+  if (titleEl) titleEl.textContent = `Live Price Feed – ${ticker}`;
+
   const days = 60;
   const prices = generatePriceHistory(info.base, days, ticker);
   const predicted = generateLSTMPrediction(prices);
@@ -456,7 +465,7 @@ function buildDashPriceChart(ticker) {
 }
 
 function buildRecoGrid() {
-  const tickers = ['AAPL', 'TSLA', 'GOOGL', 'MSFT', 'AMZN', 'NVDA'];
+  const tickers = ['AAPL', 'TSLA', 'GOOGL', 'MSFT', 'GOLD', 'SILVER'];
   const html = tickers.map(sym => {
     const info = STOCKS[sym];
     const prices = generatePriceHistory(info.base, 90, sym);
@@ -562,6 +571,7 @@ function runAnalysis(ticker, chartType = 'line') {
   const mainContainer = $('main-price-chart');
   mainContainer.innerHTML = '';
   const chart = createLineChart('main-price-chart');
+  chart.applyOptions({ height: 350 });
   mainChartInstance = chart;
   const toTS = (arr) => arr.map((v, i) => ({ time: 1700000000 + i * 86400, value: v }));
 
