@@ -226,21 +226,34 @@ function destroyChart(id) {
 function destroyLW(ref) { if (ref) { try { ref.remove(); } catch (e) { } } }
 
 // ─── LIGHTWEIGHT CHARTS HELPERS ────────────────────────────────
-function createLineChart(containerId, labelMap) {
+function createLineChart(containerId) {
   const container = $(containerId);
+  if (!container) return null;
   container.innerHTML = '';
+
+  // Wait for next frame to get layout info if hidden
+  const w = container.offsetWidth || 600;
+  const h = container.offsetHeight || parseInt(container.style.height) || 300;
+
   const chart = LightweightCharts.createChart(container, {
-    width: container.offsetWidth,
-    height: container.offsetHeight || 300,
+    width: w,
+    height: h,
     layout: { background: { color: 'transparent' }, textColor: '#9AA5BE', fontFamily: 'Inter' },
     grid: { vertLines: { color: 'rgba(255,255,255,0.04)' }, horzLines: { color: 'rgba(255,255,255,0.04)' } },
     rightPriceScale: { borderColor: 'rgba(255,255,255,0.08)' },
     timeScale: { borderColor: 'rgba(255,255,255,0.08)', timeVisible: true },
     crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
   });
+
   new ResizeObserver(() => {
-    chart.applyOptions({ width: container.offsetWidth });
+    if (container.offsetWidth > 0) {
+      chart.applyOptions({
+        width: container.offsetWidth,
+        height: container.offsetHeight || parseInt(container.style.height) || 300
+      });
+    }
   }).observe(container);
+
   return chart;
 }
 
