@@ -277,8 +277,11 @@ function switchView(view) {
     $('view-' + v)?.classList.toggle('active', v === view);
     $('nav-' + v)?.classList.toggle('active', v === view);
   });
-  if (view === 'analysis') initAnalysisView();
+
   switch (view) {
+    case 'dashboard':
+      // Dashboard is partially dynamic, but we can refresh components if needed
+      break;
     case 'analysis':
       initAnalysisView();
       break;
@@ -290,9 +293,6 @@ function switchView(view) {
       break;
     case 'model':
       initModelView();
-      break;
-    case 'settings':
-      // Settings view is static for now
       break;
   }
 }
@@ -377,13 +377,11 @@ function buildWatchlist() {
     const price = info.base + rnd(-info.base * 0.03, info.base * 0.03);
     const chg = rnd(-3, 4);
     const dir = chg >= 0;
-    const rcom = computeRecommendation(
-      generatePriceHistory(price, 90, sym),
-      [], { macd: [], signal: [] }
-    );
-    // simple signal
-    const sigs = ['buy', 'hold', 'sell'];
-    const signal = sigs[randInt(0, 3)];
+    const prices = generatePriceHistory(info.base, 90, sym);
+    const rsi = generateRSI(prices);
+    const macdData = generateMACD(prices);
+    const rec = computeRecommendation(prices, rsi, macdData);
+    const signal = rec.action;
     return `<div class="watchlist-row">
       <div>
         <div class="wl-symbol">${sym}</div>
@@ -541,7 +539,8 @@ function initAnalysisView() {
       runAnalysis($('analysis-ticker').value, 'candle');
     });
   }
-  runAnalysis($('analysis-ticker').value);
+  // Use a small timeout to ensure the view is display:block and has dimensions
+  setTimeout(() => runAnalysis($('analysis-ticker').value), 50);
 }
 
 function runAnalysis(ticker, chartType = 'line') {
@@ -571,7 +570,6 @@ function runAnalysis(ticker, chartType = 'line') {
   const mainContainer = $('main-price-chart');
   mainContainer.innerHTML = '';
   const chart = createLineChart('main-price-chart');
-  chart.applyOptions({ height: 350 });
   mainChartInstance = chart;
   const toTS = (arr) => arr.map((v, i) => ({ time: 1700000000 + i * 86400, value: v }));
 
